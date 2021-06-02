@@ -42,4 +42,9 @@ make
 make install
 
 cd /app/vendor/postgresql
+
+cp -rp /usr/lib/postgresql/13/lib/postgis* ./lib
+cp -rp /usr/share/postgresql/13/contrib/postgis* ./share/contrib
+cp -rp /usr/share/postgresql/13/extension/postgis* ./share/extension
+
 tar -zcf - . | /gof3r put -b $S3_BUCKET -k $STACK_FOLDER/postgresql-$POSTGRESQL_VERSION.tgz --acl public-read
