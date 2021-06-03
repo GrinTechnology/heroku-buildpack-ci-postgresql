@@ -43,8 +43,14 @@ make install
 
 cd /app/vendor/postgresql
 
-cp -rp /usr/lib/postgresql/13/lib/postgis* ./lib
-cp -rp /usr/share/postgresql/13/contrib/postgis* ./share/contrib
-cp -rp /usr/share/postgresql/13/extension/postgis* ./share/extension
+cp -rpH /usr/lib/postgresql/13/lib/postgis* ./lib
+
+# FIXME This command fails, even though libgeos_c.so.1 is sitting there in ./lib right next to postgis-3.so
+# ~$ psql -c "CREATE EXTENSION postgis" $DATABASE_URL
+#  ERROR:  could not load library "/app/.indyno/vendor/postgresql/lib/postgis-3.so": libgeos_c.so.1: cannot open shared object file: No such file or directory
+cp -rpH /usr/lib/x86_64-linux-gnu/libgeos* ./lib
+
+cp -rpH /usr/share/postgresql/13/contrib/postgis* ./share/contrib
+cp -rpH /usr/share/postgresql/13/extension/postgis* ./share/extension
 
 tar -zcf - . | /gof3r put -b $S3_BUCKET -k $STACK_FOLDER/postgresql-$POSTGRESQL_VERSION.tgz --acl public-read
